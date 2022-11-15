@@ -55,6 +55,7 @@ object BlockPlacementSkillMenu extends Menu {
     import com.github.unchama.seichiassist.concurrent.PluginExecutionContexts.layoutPreparationContext
     import player._
     private val maxRange = 15
+    private val minRange = 3
     private val maxAreaInt = (maxRange - 1) / 2
 
     implicit class PlayerDataOps(val playerData: TemporaryMutableBuildAssistPlayerData) {
@@ -117,7 +118,7 @@ object BlockPlacementSkillMenu extends Menu {
           s"$RESET${AQUA}現在の範囲設定： $currentRange×$currentRange",
           s"$RESET$AQUA${UNDERLINE}変更後の範囲設定： ${maxRange}×${maxRange}"
         )
-        .amount(11)
+        .amount(maxRange)
         .build()
 
       Button(
@@ -152,7 +153,7 @@ object BlockPlacementSkillMenu extends Menu {
             }
           )
         }
-        .amount(maxAreaInt)
+        .amount(changedRange min maxRange)
         .build()
 
       Button(
@@ -212,11 +213,11 @@ object BlockPlacementSkillMenu extends Menu {
             } else {
               List(
                 s"$RESET$AQUA${UNDERLINE}変更後の範囲設定： $changedRange×$changedRange",
-                s"$RESET$RED※範囲設定の最小値は3×3※"
+                s"$RESET$RED※範囲設定の最小値は${minRange}×${minRange}※"
               )
             })
         )
-        .amount(3)
+        .amount(changedRange max minRange)
         .build()
 
       Button(
@@ -244,9 +245,9 @@ object BlockPlacementSkillMenu extends Menu {
         .title(s"$RED$UNDERLINE${BOLD}範囲設定を最小値に変更")
         .lore(
           s"$RESET${AQUA}現在の範囲設定： $currentRange×$currentRange",
-          s"$RESET$AQUA${UNDERLINE}変更後の範囲設定： 3×3"
+          s"$RESET$AQUA${UNDERLINE}変更後の範囲設定： ${minRange}×${minRange}"
         )
-        .amount(1)
+        .amount(minRange)
         .build()
 
       Button(
@@ -256,7 +257,7 @@ object BlockPlacementSkillMenu extends Menu {
           targetedeffect.UnfocusedEffect {
             playerData.AREAint = 1
           },
-          MessageEffect(s"${RED}現在の範囲設定は 3×3 です"),
+          MessageEffect(s"${RED}現在の範囲設定は ${minRange}×${minRange} です"),
           open
         )
       )
